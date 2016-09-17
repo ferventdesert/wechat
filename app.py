@@ -24,6 +24,11 @@ con=sqlite3.connect('yaohao.sqlite')
 #sql.to_sql(users,'users',con)
 #con.execute('create index users_id on users(id)')
 #con.close()
+
+
+import  codecs
+log_file= codecs.open('input.log','w',encoding='utf-8')
+
 @app.route('/', methods = ['GET', 'POST'] )
 def wechat_auth():
   if request.method == 'GET':
@@ -50,7 +55,7 @@ def wechat_auth():
   else:
       try:
           result=get_response(Content);
-          print(Content)
+          log_file.write(Content)
       except Exception as e:
           import traceback
           traceback.print_exc()
@@ -106,3 +111,4 @@ if __name__ == '__main__':
     #exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
+    log_file.close()
