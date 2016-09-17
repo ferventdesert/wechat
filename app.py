@@ -51,7 +51,9 @@ def wechat_auth():
       try:
           result=get_response(Content);
           print(Content)
-      except BaseException:
+      except Exception as e:
+          import traceback
+          traceback.print_exc()
           result = u'沙漠君设计的程序不是很靠谱诶';
   response = make_response( reply % (FromUserName, ToUserName, str(int(time.time())),result ) )
   response.content_type = 'application/xml'
@@ -96,11 +98,11 @@ def get_yaohao(id):
     return res;
 
 if __name__ == '__main__':
-    print get_response(u'历史')
-    print get_response(u'帮助')
-    print get_response(u'转载')
-    print get_response(u'1193432842389423732')
-    print get_response(u'5606101836469')
+    # print get_response(u'历史')
+    # print get_response(u'帮助')
+    # print get_response(u'转载')
+    # print get_response(u'1193432842389423732')
+    # print get_response(u'5606101836469')
     #exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
