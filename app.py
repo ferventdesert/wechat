@@ -50,8 +50,9 @@ def wechat_auth():
   else:
       try:
           result=get_response(Content);
+          print(Content)
       except BaseException:
-          result = u'您的输入有误';
+          result = u'沙漠君设计的程序不是很靠谱诶';
   response = make_response( reply % (FromUserName, ToUserName, str(int(time.time())),result ) )
   response.content_type = 'application/xml'
   return response
@@ -66,13 +67,14 @@ def get_type(text):
   if res is not None:
       return 'yaohao',res.group(0);
   else:
-      return other_str;
+      return u'其他',other_str;
 def get_response(text):
     mtype=get_type(text)
     if mtype[0]=='yaohao':
         return get_yaohao(mtype[1])
     else:
         return mtype[1]
+
 
 def get_yaohao(id):
     columns=['index','id','start','end','period','count','selected','lost']
@@ -85,11 +87,12 @@ def get_yaohao(id):
         #dic={'count': 31, 'end': 49, 'lost': [25, 26, 27, 34, 35, 50, 51], 'selected': 0, 'period': 26, 'start': 19, 'id': '5606101836469'}
     #print dic;
     dic['start']= period_dict[dic['start']];
-    dic['select']= u'已经摇中' if dic['selected']==1 else u'还没有摇中'
-    dic['lost_count']=len(dic['lost']);
-    dic['lost']= ' '.join( period_dict[int(r)] for r in  dic['lost'].split(' '));
-    dic['percent']= 0.05;
-    res= u'您的编号{id},在{start}期开始摇号,总计{count}次,{select}\n中间中断了{lost_count}期,分别是{lost} \n目前摇号概率为{percent}'.format(**dic);
+    dic['select']= u'恭喜摇中!摇中了还查什么...' if dic['selected']==1 else u'还没有摇中/(ㄒoㄒ)/'
+    dic['lost_count']=len(dic['lost'].split(' '));
+    dic['lost']= '【' + ' '.join( period_dict[int(r)] for r in  dic['lost'].split(' '))+'】';
+    dic['ratio']= int(int(dic['count'])/6.0);
+    dic['percent']= int(dic['count']/6.0/991.0);
+    res= u'您的编号{id}\n在{start}期开始摇号,总计{count}次,{select}\n期间中断了{lost_count}期,分别是{lost} \n目前中签概率为{ratio}倍, 摇中所需时间的期望为'.format(**dic);
     return res;
 
 if __name__ == '__main__':
@@ -98,6 +101,6 @@ if __name__ == '__main__':
     print get_response(u'转载')
     print get_response(u'1193432842389423732')
     print get_response(u'5606101836469')
-    exit()
+    #exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
