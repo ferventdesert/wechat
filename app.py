@@ -55,7 +55,7 @@ def wechat_auth():
   else:
       try:
           result=get_response(Content);
-          log_file.write(Content)
+          log_file.write(Content+'\n')
       except Exception as e:
           import traceback
           traceback.print_exc()
