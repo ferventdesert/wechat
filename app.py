@@ -26,6 +26,13 @@ con=sqlite3.connect('yaohao.sqlite')
 #con.close()
 
 
+def get_int(x):
+    try:
+        x=int(x)
+        return x
+    except Exception as e:
+        return 0;
+
 import  codecs
 log_file= codecs.open('input.log','w',encoding='utf-8')
 
@@ -96,8 +103,8 @@ def get_yaohao(id):
     dic['start']= period_dict[dic['start']];
     dic['select']= u'恭喜摇中!摇中了还查什么...' if dic['selected']==1 else u'还没有摇中/(ㄒoㄒ)/'
     dic['lost_count']=len(dic['lost'].split(' '));
-    dic['lost']= u'【' + ' '.join( period_dict[int(r)] for r in  dic['lost'].split(' '))+u'】';
-    dic['ratio']= int(int(dic['count'])/6.0);
+    dic['lost']= u'【' + ' '.join( period_dict[get_int(r)] for r in  dic['lost'].split(' ') if r.strip()!='')+u'】';
+    dic['ratio']= get_int(get_int(dic['count'])/6.0);
     dic['percent']= round(dic['count']/6.0/991.0,5);
     res= u'您的编号{id}\n在{start}期开始摇号,总计{count}次,{select}\n期间中断了{lost_count}期,分别是{lost} \n目前中签倍率为{ratio}倍, 下期摇中概率{percent}'.format(**dic);
     return res;
@@ -106,8 +113,8 @@ if __name__ == '__main__':
     # print get_response(u'历史')
     # print get_response(u'帮助')
     # print get_response(u'转载')
-    # print get_response(u'1193432842389423732')
-    # print get_response(u'5606101836469')
+    print get_response(u'1193432842389423732')
+    print get_response(u'5606101836469')
     #exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
