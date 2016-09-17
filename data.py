@@ -1,3 +1,4 @@
+# encoding: UTF-8
 period_dict={1: u'201101',
  2: u'201102',
  3: u'201103',
@@ -49,3 +50,21 @@ period_dict={1: u'201101',
  49: u'201601',
  50: u'201602',
  51: u'201603'};
+
+
+forward_str=u'''
+非商业性质转载，请在文章开头标注：转载自《沙漠之鹰》，并在文末添加沙漠之鹰公众号二维码
+若为商业性转载，请务必联系沙漠君本人，否则造成的一切后果请自行承担'''
+
+history_str=u'''http://mp.weixin.qq.com/mp/getmasssendmsg?__biz=MzIzMTAxNDQyNA==#wechat_webview_type=1&wechat_redirect'''
+
+help_str=u'''可以回复:
+【北京摇号13位编码】查看您当前摇号状态
+【历史】 沙漠之鹰历史文章
+【转载】 转载要求
+【帮助】 显示帮助信息
+'''
+
+other_str=u'沙漠君会尽快给您回复,另可回复【帮助】查看自动回复方法'
+
+res_dict={u'转载':forward_str,u'历史':history_str,u'帮助':help_str}

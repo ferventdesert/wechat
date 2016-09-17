@@ -8,19 +8,22 @@ from flask import request
 from lxml import etree
 import xml.etree.ElementTree as ET
 import time
-from data import period_dict
+from data import *
+from pandas.io import sql
 import pandas as pd
 app = Flask(__name__);
 
+import sqlite3
 
-DEBUG=True
 tips=u'你好啊'
-print ('start load data')
-if not DEBUG:
-    users= pd.read_hdf('yaohao.h5','user');
-    users.index= users.id
-print ('data loaded')
-
+con=None
+#users= pd.read_hdf('yaohao.h5','user');
+#users['lost']= users['lost'].map(lambda x:' '.join([str(r) for r in x]))
+con=sqlite3.connect('yaohao.sqlite')
+#con.execute('drop table if exists users')
+#sql.to_sql(users,'users',con)
+#con.execute('create index users_id on users(id)')
+#con.close()
 @app.route('/', methods = ['GET', 'POST'] )
 def wechat_auth():
   if request.method == 'GET':
@@ -55,35 +58,46 @@ def wechat_auth():
 
 def get_type(text):
   import re
+  if text in res_dict:
+      return text,res_dict[text];
+
   num=re.compile('\\d{13}')
   res=num.search(text);
   if res is not None:
       return 'yaohao',res.group(0);
+  else:
+      return other_str;
 def get_response(text):
     mtype=get_type(text)
     if mtype[0]=='yaohao':
         return get_yaohao(mtype[1])
+    else:
+        return mtype[1]
 
 def get_yaohao(id):
-    if not DEBUG:
-        u=users.ix[id];
-        if u is None:
-            return u'没有找到您要查询的用户';
-        dic=u.to_dict();
+    columns=['index','id','start','end','period','count','selected','lost']
+    res=con.execute('select * from users where id=%s'%(id))
+    res = res.fetchone()
+    if res is None:
+        return u'没有找到您要查询的用户';
     else:
-        dic={'count': 31, 'end': 49, 'lost': [25, 26, 27, 34, 35, 50, 51], 'selected': 0, 'period': 26, 'start': 19, 'id': '5606101836469'}
+        dic = dict(zip( columns,res))
+        #dic={'count': 31, 'end': 49, 'lost': [25, 26, 27, 34, 35, 50, 51], 'selected': 0, 'period': 26, 'start': 19, 'id': '5606101836469'}
     #print dic;
     dic['start']= period_dict[dic['start']];
     dic['select']= u'已经摇中' if dic['selected']==1 else u'还没有摇中'
     dic['lost_count']=len(dic['lost']);
-    dic['lost']= ' '.join( period_dict[r] for r in  dic['lost']);
-    dic['percent']= 1.0//1000;
-
+    dic['lost']= ' '.join( period_dict[int(r)] for r in  dic['lost'].split(' '));
+    dic['percent']= 0.05;
     res= u'您的编号{id},在{start}期开始摇号,总计{count}次,{select}\n中间中断了{lost_count}期,分别是{lost} \n目前摇号概率为{percent}'.format(**dic);
     return res;
 
 if __name__ == '__main__':
-    print get_response('5606101836469')
-    if DEBUG:
-        exit()
+    print get_response(u'历史')
+    print get_response(u'帮助')
+    print get_response(u'转载')
+    print get_response(u'1193432842389423732')
+    print get_response(u'5606101836469')
+    exit()
     app.run(host='0.0.0.0', port=80, debug=False)
+    con.close()
