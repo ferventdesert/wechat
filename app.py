@@ -106,6 +106,7 @@ def get_yaohao(id):
     dic['start']= period_dict[dic['start']];
     dic['select']= u'恭喜摇中!摇中了还查什么...' if dic['selected']==1 else u'还没有摇中/(ㄒoㄒ)/'
     lost_count=end-start+1-period
+    dic['lost_count']=lost_count
     if lost_count==0:
         dic['lost']=u'您没有拉下一次摇号!'
     else:
@@ -113,11 +114,12 @@ def get_yaohao(id):
         dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=lost_count,lost=lost_period);
 
     ratio= get_int(get_int(dic['count'])/6.0)
-    dic['ratio']=ratio
+
     if ratio==0:
         ratio=1
     if ratio>9:
         ratio=9
+    dic['ratio'] = ratio
     dic['percent']= round(ratio*1/991.0,5);
     res= u'您的编号{id}\n在{start}期开始摇号,总计{period}次,{select}\n{lost}\n目前中签倍率为{ratio}倍, 下期摇中概率{percent}'.format(**dic);
     return res;
@@ -126,9 +128,9 @@ if __name__ == '__main__':
     # print get_response(u'历史')
     # print get_response(u'帮助')
     # print get_response(u'转载')
-    #print get_response(u'5935104232928')
+    print get_response(u'7208103057461')
     #print get_response(u'5606101836469')
-    #exit()
+    exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
     log_file.close()
