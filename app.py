@@ -20,6 +20,9 @@ con=None
 #users= pd.read_hdf('yaohao.h5','user');
 #users['lost']= users['lost'].map(lambda x:' '.join([str(r) for r in x]))
 con=sqlite3.connect('yaohao.sqlite')
+#t=con.execute('select count(id) from users')
+#t=t.fetchone()
+
 #con.execute('drop table if exists users')
 #sql.to_sql(users,'users',con)
 #con.execute('create index users_id on users(id)')
@@ -92,7 +95,7 @@ def get_response(text):
 
 def get_yaohao(id):
     columns=['index','id','start','end','period','count','selected','lost']
-    res=con.execute('select * from users where id=%s'%(id))
+    res=con.execute('select * from users where id="%s"'%(id))
     res = res.fetchone()
     if res is None:
         return u'没有找到您要查询的用户';
@@ -113,7 +116,7 @@ def get_yaohao(id):
         lost_period=u'【' + ' '.join( period_dict[get_int(r)] for r in  dic['lost'].split(' ') if r.strip()!='')+u'】';
         dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=lost_count,lost=lost_period);
 
-    ratio= get_int(get_int(dic['count'])/6.0)
+    ratio= get_int(get_int(dic['period'])/6.0)
 
     if ratio==0:
         ratio=1
@@ -121,14 +124,15 @@ def get_yaohao(id):
         ratio=9
     dic['ratio'] = ratio
     dic['percent']= round(ratio*1/991.0,5);
-    res= u'您的编号{id}\n在{start}期开始摇号,总计{period}次,{select}\n{lost}\n目前中签倍率为{ratio}倍, 下期摇中概率{percent}'.format(**dic);
+    res= u'您的编号{id}\n在{start}期开始摇号,总计{period}期,出现{count}次,{select}\n{lost}\n目前中签倍率为{ratio}倍, 下期摇中概率{percent}'.format(**dic);
     return res;
 
 if __name__ == '__main__':
     # print get_response(u'历史')
     # print get_response(u'帮助')
     # print get_response(u'转载')
-    #print get_response(u'7208103057461')
+
+    #print get_response(u'0203101800247')
     #print get_response(u'5606101836469')
     #exit()
     app.run(host='0.0.0.0', port=80, debug=False)
