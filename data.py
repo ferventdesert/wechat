@@ -57,14 +57,17 @@ forward_str=u'''
 若为商业性转载，请务必联系沙漠君本人，否则造成的一切后果请自行承担'''
 
 history_str=u'''http://mp.weixin.qq.com/mp/getmasssendmsg?__biz=MzIzMTAxNDQyNA==#wechat_webview_type=1&wechat_redirect'''
+good_str=u'''http://mp.weixin.qq.com/mp/homepage?__biz=MzIzMTAxNDQyNA==&hid=1&sn=2a5bbab9a95b6a5a050e0bec2c43b53d#wechat_redirect'''
 
 help_str=u'''可以回复:
 【北京摇号13位编码】查看您当前摇号状态
 【历史】 沙漠之鹰历史文章
 【转载】 转载要求
+【精选】 沙漠君的作战地图
 【帮助】 显示帮助信息
 '''
 
-other_str=u'沙漠君会尽快给您回复,另可回复【帮助】查看自动回复方法'
+#other_str=u'沙漠君会尽快给您回复,另可回复【帮助】查看自动回复方法'
+other_str=u''
 
-res_dict={u'转载':forward_str,u'历史':history_str,u'帮助':help_str}
+res_dict={u'转载':forward_str,u'历史':history_str,u'帮助':help_str,u'精选':good_str}

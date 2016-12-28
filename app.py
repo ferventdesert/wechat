@@ -29,6 +29,16 @@ con=sqlite3.connect('yaohao.sqlite')
 #con.close()
 
 
+#@app.route('/')
+#def root():
+#    return app.send_static_file('index.html')
+
+@app.route('/resources/<m_file>', methods=['GET'])
+def get_static_file(m_file):
+    print(m_file)
+    return app.send_static_file('resources/'+m_file)
+
+
 def get_int(x):
     try:
         x=int(x)
@@ -37,7 +47,7 @@ def get_int(x):
         return 0;
 
 import  codecs
-log_file= codecs.open('input.log','w',encoding='utf-8')
+log_file= codecs.open('input.log','a',encoding='utf-8')
 
 @app.route('/', methods = ['GET', 'POST'] )
 def wechat_auth():
@@ -52,7 +62,8 @@ def wechat_auth():
     s.sort()
     s = ''.join(s)
     if ( hashlib.sha1(s).hexdigest() == signature ):
-      return make_response(echostr)
+    #  return make_response(echostr)
+      return echostr 
   # Get the infomations from the recv_xml.
   xml_recv = ET.fromstring(request.data)
   ToUserName = xml_recv.find("ToUserName").text
@@ -135,6 +146,6 @@ if __name__ == '__main__':
     #print get_response(u'0203101800247')
     #print get_response(u'5606101836469')
     #exit()
-    app.run(host='0.0.0.0', port=80, debug=False)
+    app.run(host='0.0.0.0', port=80, debug=True)
     con.close()
     log_file.close()
