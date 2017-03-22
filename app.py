@@ -146,6 +146,6 @@ if __name__ == '__main__':
     #print get_response(u'0203101800247')
     #print get_response(u'5606101836469')
     #exit()
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
     log_file.close()
