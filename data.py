@@ -84,6 +84,6 @@ help_str=u'''可以回复:
 
 other_str=u'沙漠君会尽快给您回复,另可回复【帮助】查看自动回复方法'
 
-zizhu_help =u"自住房摇号，请使用'自住房 查询姓名'来查询，谢谢"
+zizhu_help =u"自住房摇号，请使用'自住房 姓名'来查询，谢谢"
 
 res_dict={u'转载':forward_str,u'历史':history_str,u'帮助':help_str,u'精选':good_str}

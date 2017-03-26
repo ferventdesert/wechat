@@ -164,7 +164,7 @@ def get_zizhu(user):
 
         result+=u"查询'{0}',共有{1}个编码:\n".format(user,len(dic_list))
         if len(dic_list) > 20:
-            result+=u'重名人数过多,仅输出前50个,请输入编码查询\n' +'\n'.join(sorted(dic_list.keys()[:50]))
+            result+=u'重名人数过多,仅输出前50个编码,请输入【自住房 编码】查询\n' +'\n'.join(sorted(dic_list.keys()[:50]))
             return result
 
         string = u'  {name},{type},排名{rank}\n'
@@ -185,7 +185,8 @@ if __name__ == '__main__':
 
     print get_response(u'0203101800247')
     print get_response(u'5606101836469')
-    print get_response(u'自住房 韩敏')
+    print get_response(u'自住房  韩笑')
+    exit()
     print get_response(u'自住房 王伟')
     print get_response(u'自住房 9179001681472')
     app.run(host='0.0.0.0', port=80, debug=False)
