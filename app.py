@@ -140,8 +140,13 @@ def get_yaohao(id):
 
 
 def get_zizhu(user):
-    columns = [u'name', u'type',  u'index',u'rank']
-    res = con.execute('select _name,_type,_index,_rank from zizhu where _user="%s"' % (user))
+    result=''
+    if len(user)<5:
+        res = con.execute('select _name,_type, _index,_rank from zizhu where _user="%s"' % (user))
+    else:
+        res = con.execute('select _name,_type, _index,_rank from zizhu where _index="%s"' % (user))
+    columns = [u'name', u'type', u'index',u'rank']
+
     res = res.fetchall()
     if res is None:
         return u'没有找到您要查询的用户';
@@ -156,8 +161,14 @@ def get_zizhu(user):
                 dic_list[index]=[dic]
             else:
                 dic_list[index].append(dic)
-        result=u"查询'{0}',共有{1}个编码:\n".format(user,len(dic_list))
-        string = u'   {name},{type}，排名{rank}\n'
+
+        result+=u"查询'{0}',共有{1}个编码:\n".format(user,len(dic_list))
+        if len(dic_list) > 20:
+            result+=u'重名人数过多,仅输出前50个,请输入编码查询\n' +'\n'.join(sorted(dic_list.keys()[:50]))
+            return result
+
+        string = u'  {name},{type},排名{rank}\n'
+
         for k,v in dic_list.items():
             result+=u'申请编码:'+ k+'\n'
             for vv in v:
@@ -175,7 +186,8 @@ if __name__ == '__main__':
     print get_response(u'0203101800247')
     print get_response(u'5606101836469')
     print get_response(u'自住房 韩敏')
-    exit()
+    print get_response(u'自住房 王伟')
+    print get_response(u'自住房 9179001681472')
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
     log_file.close()

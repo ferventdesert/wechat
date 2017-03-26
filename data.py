@@ -74,8 +74,8 @@ history_str=u'''http://mp.weixin.qq.com/mp/getmasssendmsg?__biz=MzIzMTAxNDQyNA==
 good_str=u'''http://mp.weixin.qq.com/mp/homepage?__biz=MzIzMTAxNDQyNA==&hid=1&sn=2a5bbab9a95b6a5a050e0bec2c43b53d#wechat_redirect'''
 
 help_str=u'''可以回复:
-【北京机动车13位编码】查看摇号状态
-【自住房 姓名】查看自住房摇号历史
+【北京机动车13位编码】机动车摇号状态
+【自住房 姓名】自住房摇号历史
 【历史】 沙漠之鹰历史文章
 【转载】 转载要求
 【精选】 沙漠君的作战地图
