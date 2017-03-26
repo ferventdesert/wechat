@@ -17,17 +17,7 @@ import sqlite3
 
 tips=u'你好啊'
 con=None
-#users= pd.read_hdf('yaohao.h5','user');
-#users['lost']= users['lost'].map(lambda x:' '.join([str(r) for r in x]))
 con=sqlite3.connect('yaohao.sqlite')
-#t=con.execute('select count(id) from users')
-#t=t.fetchone()
-
-#con.execute('drop table if exists users')
-#sql.to_sql(users,'users',con)
-#con.execute('create index users_id on users(id)')
-#con.close()
-
 
 #@app.route('/')
 #def root():
@@ -89,6 +79,11 @@ def get_type(text):
   import re
   if text in res_dict:
       return text,res_dict[text];
+  if text.startswith(u'自住'):
+      user= [r.strip() for r in  text.split(' ') if r!='']
+      if len(user)<2:
+         return u'其他',zizhu_help
+      return 'zizhu',user[1]
 
   num=re.compile('\\d{13}')
   res=num.search(text);
@@ -100,6 +95,8 @@ def get_response(text):
     mtype=get_type(text)
     if mtype[0]=='yaohao':
         return get_yaohao(mtype[1])
+    elif mtype[0]=='zizhu':
+        return get_zizhu(mtype[1])
     else:
         return mtype[1]
 
@@ -124,8 +121,9 @@ def get_yaohao(id):
     if lost_count==0:
         dic['lost']=u'您没有拉下一次摇号!'
     else:
-        lost_period=u'【' + ' '.join( period_dict[get_int(r)] for r in  dic['lost'].split(' ') if r.strip()!='')+u'】';
-        dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=lost_count,lost=lost_period);
+        arr=[period_dict[get_int(r)]  for r in  dic['lost'].split(' ') if r.strip()!='']
+        lost_period=u'【' + ' '.join(arr)+u'】';
+        dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=len(arr),lost=lost_period);
 
     ratio= get_int(get_int(dic['period'])/6.0)
 
@@ -134,18 +132,50 @@ def get_yaohao(id):
     if ratio>9:
         ratio=9
     dic['ratio'] = ratio
-    dic['percent']= round(ratio*1/991.0,5);
-    res= u'您的编号{id}\n在{start}期开始摇号,总计{period}期,出现{count}次,{select}\n{lost}\n目前中签倍率为{ratio}倍, 下期摇中概率{percent}'.format(**dic);
-    return res;
+    dic['percent']= int(round(1/(ratio*0.00126*6),0))*0.6
+    dic['rank']=  100-int(sum(rank_data[i] for i in range(period))/float(total_count)*100.0)
+    dic['id0']=int(dic['id'][-7:])
+    res= u'您从{start}期开始摇号,第{id0}个申请者，优先级排名前{rank}%，共摇了{period}期,出现{count}次,{select}\n{lost}\n目前中签倍率为{ratio}倍, 预计摇中需{percent}年'.format(**dic);
+    return res
+
+
+def get_zizhu(user):
+    columns = [u'name', u'type',  u'index',u'rank']
+    res = con.execute('select _name,_type,_index,_rank from zizhu where _user="%s"' % (user))
+    res = res.fetchall()
+    if res is None:
+        return u'没有找到您要查询的用户';
+    else:
+        dic_list={}
+
+        for r in res:
+
+            index= r[2]
+            dic = dict(zip(columns, r))
+            if index not in dic_list:
+                dic_list[index]=[dic]
+            else:
+                dic_list[index].append(dic)
+        result=u"查询'{0}',共有{1}个编码:\n".format(user,len(dic_list))
+        string = u'   {name},{type}，排名{rank}\n'
+        for k,v in dic_list.items():
+            result+=u'申请编码:'+ k+'\n'
+            for vv in v:
+                result+=string.format(**vv)
+        return result
+
+
+
 
 if __name__ == '__main__':
-    # print get_response(u'历史')
-    # print get_response(u'帮助')
-    # print get_response(u'转载')
+    print get_response(u'历史')
+    print get_response(u'帮助')
+    print get_response(u'转载')
 
-    #print get_response(u'0203101800247')
-    #print get_response(u'5606101836469')
-    #exit()
+    print get_response(u'0203101800247')
+    print get_response(u'5606101836469')
+    print get_response(u'自住房 韩敏')
+    exit()
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
     log_file.close()
