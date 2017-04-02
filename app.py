@@ -179,16 +179,6 @@ def get_zizhu(user):
 
 
 if __name__ == '__main__':
-    print get_response(u'历史')
-    print get_response(u'帮助')
-    print get_response(u'转载')
-
-    print get_response(u'0203101800247')
-    print get_response(u'5606101836469')
-    print get_response(u'自住房  韩笑')
-    exit()
-    print get_response(u'自住房 王伟')
-    print get_response(u'自住房 9179001681472')
     app.run(host='0.0.0.0', port=80, debug=False)
     con.close()
     log_file.close()
