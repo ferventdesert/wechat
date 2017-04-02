@@ -119,16 +119,14 @@ def get_yaohao(id):
     lost_count=end-start+1-period
     dic['lost_count']=lost_count
     if lost_count==0:
-        dic['lost']=u'您没有拉下一次摇号!'
+        dic['lost']=u'您没有落下一次摇号!'
     else:
         arr=[period_dict[get_int(r)]  for r in  dic['lost'].split(' ') if r.strip()!='']
         lost_period=u'【' + ' '.join(arr)+u'】';
         dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=len(arr),lost=lost_period);
 
-    ratio= get_int(get_int(dic['period'])/6.0)
+    ratio= get_int(get_int(dic['period'])/6.0)+1
 
-    if ratio==0:
-        ratio=1
     if ratio>9:
         ratio=9
     dic['ratio'] = ratio
@@ -185,7 +183,7 @@ if __name__ == '__main__':
 
     print get_response(u'0203101800247')
     print get_response(u'5606101836469')
-    print get_response(u'自住房  韩笑')
+    print get_response(u'自住房 张睿')
     exit()
     print get_response(u'自住房 王伟')
     print get_response(u'自住房 9179001681472')
