@@ -58,7 +58,11 @@ def wechat_auth():
   xml_recv = ET.fromstring(request.data)
   ToUserName = xml_recv.find("ToUserName").text
   FromUserName = xml_recv.find("FromUserName").text
-  Content = xml_recv.find("Content").text
+  Content = xml_recv.find("Content") 
+  if Content is None:
+      Content=''
+  else:
+      Content=Content.text
   reply = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
   result=''
   if Content == 'h':
@@ -119,16 +123,14 @@ def get_yaohao(id):
     lost_count=end-start+1-period
     dic['lost_count']=lost_count
     if lost_count==0:
-        dic['lost']=u'您没有拉下一次摇号!'
+        dic['lost']=u'您没有落下一次摇号!'
     else:
         arr=[period_dict[get_int(r)]  for r in  dic['lost'].split(' ') if r.strip()!='']
         lost_period=u'【' + ' '.join(arr)+u'】';
         dic['lost']= u'期间中断了{lost_count}期,分别是{lost}'.format(lost_count=len(arr),lost=lost_period);
 
-    ratio= get_int(get_int(dic['period'])/6.0)
+    ratio= get_int(get_int(dic['period'])/6.0)+1
 
-    if ratio==0:
-        ratio=1
     if ratio>9:
         ratio=9
     dic['ratio'] = ratio
